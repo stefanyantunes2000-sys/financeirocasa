@@ -149,12 +149,13 @@
         // Alerta sem nome fixo, usando o dono selecionado
         alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
         
-        // Substitua o alert/console.log por isso:
-fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
+       fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
     method: "POST",
-    body: JSON.stringify(dados) // Aqui estão os dados que o Lucas lançou
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dados)
 }).then(() => alert("Enviado para o Notion!"));
-    }
 
     renderCategorias();
 </script>
