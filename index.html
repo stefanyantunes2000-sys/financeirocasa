@@ -146,11 +146,6 @@
     data: new Date().toISOString()
 };
 
-fetch("SEU_LINK_DO_MAKE", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(dados)
-}).then(() => alert("Lançamento realizado!"));
 
         // Alerta sem nome fixo, usando o dono selecionado
         alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
