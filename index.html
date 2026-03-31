@@ -136,30 +136,27 @@
             return;
         }
 
-   const dados = {
-    descricao: document.getElementById('descricao').value,
-    valor: document.getElementById('valor').value,
-    dono: document.getElementById('dono').value,
-    tipo: document.getElementById('tipo').value,
-    categoria: document.getElementById('categoria').value, // Campo novo
-    pagamento: document.getElementById('pagamento').value, // Campo novo
-    data: new Date().toISOString()
-};
-
-
+        const dados = {
+        tipo: currentType,
+        dono: currentOwner,
+        valor: valor,
+        descricao: desc,
+        categoria: cat, // ou o nome que você usou na variável
+        pagamento: met, // ou o nome que você usou na variável
+        data: new Date().toISOString()
+    };
         // Alerta sem nome fixo, usando o dono selecionado
         alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
-        
-       fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(dados)
-}).then(() => alert("Enviado para o Notion!"));
 
-    renderCategorias();
+    fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+    }).then(() => alert("Enviado para o Notion!"));
+
+} // <--- ATENÇÃO: Essa é a chave que fecha a função processarEnvio()! Se ela sumiu, o erro acontece.
 </script>
-
 </body>
 </html>
