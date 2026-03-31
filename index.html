@@ -136,15 +136,21 @@
             return;
         }
 
-        const dados = {
-            tipo: currentType,
-            dono: currentOwner,
-            valor: valor,
-            descricao: desc,
-            categoria: cat,
-            metodo: met,
-            data: new Date().toISOString()
-        };
+   const dados = {
+    descricao: document.getElementById('descricao').value,
+    valor: document.getElementById('valor').value,
+    dono: document.getElementById('dono').value,
+    tipo: document.getElementById('tipo').value,
+    categoria: document.getElementById('categoria').value, // Campo novo
+    pagamento: document.getElementById('pagamento').value, // Campo novo
+    data: new Date().toISOString()
+};
+
+fetch("SEU_LINK_DO_MAKE", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados)
+}).then(() => alert("Lançamento realizado!"));
 
         // Alerta sem nome fixo, usando o dono selecionado
         alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
