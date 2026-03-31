@@ -125,7 +125,7 @@
         currentOwner = btn.dataset.owner;
     }
 
-    function processarEnvio() {
+function processarEnvio() {
         const valor = document.getElementById('valor').value;
         const desc = document.getElementById('desc').value;
         const cat = document.getElementById('categoria').value;
@@ -146,16 +146,20 @@
             data: new Date().toISOString()
         };
 
-        alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
-
-        // ATENÇÃO: NÃO ESQUEÇA DE TROCAR ESSE LINK!
         fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(dados)
-        }).then(() => alert("Enviado para o Notion!"));
+        }).then(() => {
+            // Apenas um alerta combinando as duas mensagens
+            alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} enviado para o Notion.`);
+            
+            // Limpando os campos para o próximo lançamento
+            document.getElementById('valor').value = '';
+            document.getElementById('desc').value = '';
+        });
     }
 
     renderCategorias(); // Carrega a lista quando a tela abre
