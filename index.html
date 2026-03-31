@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finanças S&L</title>
     <style>
-        :root { 
-            --stefany: #ff4785; 
-            --lucas: #00d2ff; 
-            --casa: #20bf6b; 
+        :root {
+            --stefany: #ff4785;
+            --lucas: #00d2ff;
+            --casa: #20bf6b;
             --entrada: #26de81;
             --saida: #eb4d4b;
-            --bg: #f0f2f5; 
+            --bg: #f0f2f5;
         }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; justify-content: center; }
         .app-card { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-top: 8px solid #333; }
@@ -137,26 +137,28 @@
         }
 
         const dados = {
-        tipo: currentType,
-        dono: currentOwner,
-        valor: valor,
-        descricao: desc,
-        categoria: cat, // ou o nome que você usou na variável
-        pagamento: met, // ou o nome que você usou na variável
-        data: new Date().toISOString()
-    };
-        // Alerta sem nome fixo, usando o dono selecionado
+            tipo: currentType,
+            dono: currentOwner,
+            valor: valor,
+            descricao: desc,
+            categoria: cat,
+            pagamento: met,
+            data: new Date().toISOString()
+        };
+
         alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
 
-    fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dados)
-    }).then(() => alert("Enviado para o Notion!"));
+        // ATENÇÃO: NÃO ESQUEÇA DE TROCAR ESSE LINK!
+        fetch("https://hook.us2.make.com/qmi8qqv6l3bvnmcbgbn8dsdfx6n8hn0c", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        }).then(() => alert("Enviado para o Notion!"));
+    }
 
-} // <--- ATENÇÃO: Essa é a chave que fecha a função processarEnvio()! Se ela sumiu, o erro acontece.
+    renderCategorias(); // Carrega a lista quando a tela abre
 </script>
 </body>
 </html>
