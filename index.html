@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças S&L</title>
+    <style>
+        :root { 
+            --stefany: #ff4785; 
+            --lucas: #00d2ff; 
+            --casa: #20bf6b; 
+            --entrada: #26de81;
+            --saida: #eb4d4b;
+            --bg: #f0f2f5; 
+        }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .app-card { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-top: 8px solid #333; }
+        
+        h2 { text-align: center; color: #333; margin-bottom: 25px; font-size: 1.4rem; letter-spacing: -0.5px; }
+
+        /* Toggle Entrada/Saída */
+        .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .type-btn { padding: 14px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; color: white; font-size: 1rem; text-transform: uppercase; opacity: 0.3; }
+        .type-btn.active { opacity: 1; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .in { background: var(--entrada); }
+        .out { background: var(--saida); }
+
+        /* Botões de Pessoa */
+        .owner-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .owner-btn { padding: 12px; border: 3px solid #f1f2f6; border-radius: 15px; cursor: pointer; font-weight: bold; background: white; font-size: 0.85rem; transition: 0.2s; }
+        .owner-btn.active[data-owner="Stefany"] { border-color: var(--stefany); color: var(--stefany); background: #fff5f8; }
+        .owner-btn.active[data-owner="Lucas"] { border-color: var(--lucas); color: var(--lucas); background: #f0fbff; }
+        .owner-btn.active[data-owner="Casa"] { border-color: var(--casa); color: var(--casa); background: #f0fff8; }
+
+        label { display: block; margin: 18px 0 6px; font-weight: 700; font-size: 0.9rem; color: #4b4b4b; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; font-size: 1rem; box-sizing: border-box; background: #fafafa; transition: 0.2s; }
+        input:focus { border-color: #333; outline: none; background: white; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .btn-salvar { background: #333; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 1.2rem; margin-top: 30px; cursor: pointer; transition: 0.3s; }
+        .btn-salvar:hover { background: #000; }
+        .btn-salvar:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <h2>Carteira S&L 💰</h2>
+
+    <div class="type-toggle">
+        <button class="type-btn in active" id="btn-in" onclick="setType('Entrada')">Recebi (+)</button>
+        <button class="type-btn out" id="btn-out" onclick="setType('Gastei')">Gastei (-)</button>
+    </div>
+
+    <label>Quem?</label>
+    <div class="owner-grid">
+        <button class="owner-btn" data-owner="Stefany" onclick="setOwner(this)">Stefany</button>
+        <button class="owner-btn" data-owner="Lucas" onclick="setOwner(this)">Lucas</button>
+        <button class="owner-btn" data-owner="Casa" onclick="setOwner(this)">Da Casa</button>
+    </div>
+
+    <div class="row">
+        <div>
+            <label>Quanto? (R$)</label>
+            <input type="number" id="valor" step="0.01" placeholder="0,00" inputmode="decimal">
+        </div>
+        <div>
+            <label>O quê?</label>
+            <input type="text" id="desc" placeholder="Ex: Mercado, Uber...">
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <label>Categoria</label>
+            <select id="categoria"></select>
+        </div>
+        <div>
+            <label>Pagamento / Via</label>
+            <select id="metodo">
+                <option value="Pix/Debito">Pix / Débito</option>
+                <option value="Cartao_S">Cartão Stefany</option>
+                <option value="Cartao_L">Cartão Lucas</option>
+                <option value="Dinheiro">Dinheiro vivo</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-salvar" onclick="processarEnvio()">SALVAR</button>
+</div>
+
+<script>
+    let currentType = 'Entrada';
+    let currentOwner = '';
+
+    const categorias = {
+        'Entrada': ['Salário', 'Extra', 'Uber', 'Reembolso', 'Outros'],
+        'Gastei': ['Alimentação', 'Pets', 'Carro/Moto', 'Lazer', 'Roupas', 'Pra Casa', 'Investimento', 'Pessoal', 'Dívida Antiga']
+    };
+
+    function setType(type) {
+        currentType = type;
+        document.getElementById('btn-in').classList.toggle('active', type === 'Entrada');
+        document.getElementById('btn-out').classList.toggle('active', type === 'Gastei');
+        
+        const metodo = document.getElementById('metodo');
+        if(type === 'Entrada') {
+            metodo.innerHTML = '<option value="Pix/Debito">Pix / Conta</option><option value="Dinheiro">Dinheiro vivo</option>';
+        } else {
+            metodo.innerHTML = '<option value="Pix/Debito">Pix / Débito</option><option value="Cartao_S">Cartão Stefany</option><option value="Cartao_L">Cartão Lucas</option><option value="Dinheiro">Dinheiro vivo</option>';
+        }
+        renderCategorias();
+    }
+
+    function renderCategorias() {
+        const select = document.getElementById('categoria');
+        const lista = (currentType === 'Entrada') ? categorias['Entrada'] : categorias['Gastei'];
+        select.innerHTML = lista.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function setOwner(btn) {
+        document.querySelectorAll('.owner-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentOwner = btn.dataset.owner;
+    }
+
+    function processarEnvio() {
+        const valor = document.getElementById('valor').value;
+        const desc = document.getElementById('desc').value;
+        const cat = document.getElementById('categoria').value;
+        const met = document.getElementById('metodo').value;
+
+        if (!currentOwner || !valor || !desc) {
+            alert("Ei! Escolha quem está lançando e preencha o valor/descrição.");
+            return;
+        }
+
+        const dados = {
+            tipo: currentType,
+            dono: currentOwner,
+            valor: valor,
+            descricao: desc,
+            categoria: cat,
+            metodo: met,
+            data: new Date().toISOString()
+        };
+
+        // Alerta sem nome fixo, usando o dono selecionado
+        alert(`Sucesso, ${currentOwner}! Lançamento de R$ ${valor} registrado.`);
+        
+        // Substitua o alert/console.log por isso:
+fetch("ne14n52of39r79zo8jdqjqdjdaouf1fb@hook.us2.make.com", {
+    method: "POST",
+    body: JSON.stringify(dados) // Aqui estão os dados que o Lucas lançou
+}).then(() => alert("Enviado para o Notion!"));
+    }
+
+    renderCategorias();
+</script>
+
+</body>
+</html>
